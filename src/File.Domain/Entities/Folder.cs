@@ -10,6 +10,6 @@ public partial class Folder
     public int UserId { get; set; }
     public bool IsDeleted { get; set; }
     public DateTime? DeletedDate { get; set; }
-    public virtual ICollection<File> Files { get; set; } = new List<File>();
+    public virtual ICollection<Files> Files { get; set; } = new List<Files>();
     public virtual User User { get; set; } = null!;
 }

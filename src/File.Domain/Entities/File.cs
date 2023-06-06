@@ -1,6 +1,6 @@
 ﻿namespace File.Domain.Entities;
 
-public partial class File
+public partial class Files
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;
