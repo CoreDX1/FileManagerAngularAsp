@@ -12,11 +12,6 @@ public partial class FileManagerContext : DbContext
     public virtual DbSet<Folder> Folders { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
-        optionsBuilder.UseSqlServer(
-            "Server=DESKTOP-5QTNUAM\\SQLEXPRESS;Database=FileManager;TrustServerCertificate=True;User id=sa;Password=index"
-        );
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
