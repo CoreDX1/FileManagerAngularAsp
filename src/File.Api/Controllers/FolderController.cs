@@ -15,7 +15,7 @@ namespace src.File.Api.Controllers
             this.app = app;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("folder")]
         public async Task<IActionResult> Get(FolderRequestDto folder)
         {

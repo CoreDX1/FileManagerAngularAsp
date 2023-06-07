@@ -12,4 +12,10 @@ public partial class Folder
     public DateTime? DeletedDate { get; set; }
     public virtual ICollection<Files> Files { get; set; } = new List<Files>();
     public virtual User User { get; set; } = null!;
+
+    public Folder()
+    {
+        CreateDate = DateTime.Now;
+        DeletedDate = null!;
+    }
 }

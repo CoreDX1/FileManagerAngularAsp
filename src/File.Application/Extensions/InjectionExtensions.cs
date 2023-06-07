@@ -1,3 +1,4 @@
+using System.Reflection;
 using File.Application.Interface;
 using File.Application.Services;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ public static class InjectionExtensions
     {
         services.AddSingleton(configuration);
         services.AddScoped<IFolderApplication, FolderApplication>();
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
 }

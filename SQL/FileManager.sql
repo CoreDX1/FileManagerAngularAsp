@@ -2,7 +2,7 @@ CREATE DATABASE FileManager;
 USE [FileManager];
 
 CREATE TABLE [User](
-    [Id] INT PRIMARY KEY,
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
     [Name] NVARCHAR(50) NOT NULL,
     [PasswordHash] NVARCHAR(255) NOT NULL,
     [PasswordSalt] NVARCHAR(255) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE [User](
 
 
 CREATE TABLE [Folder](
-    [Id] INT PRIMARY KEY,
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
     [Name] NVARCHAR(255) NOT NULL,
     [Path] NVARCHAR(MAX) NOT NULL,
     [Size] SMALLINT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE [Folder](
 )
 
 CREATE TABLE [File](
-    [Id] INT PRIMARY KEY,
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
     [Name] NVARCHAR(255) NOT NULL,
     [Path] NVARCHAR(MAX) NOT NULL,
     [CreateDate] DATETIME NOT NULL,
@@ -39,3 +39,12 @@ CREATE TABLE [File](
     FOREIGN KEY ([UserId]) REFERENCES [User] ([Id]),
     FOREIGN KEY ([FolderId]) REFERENCES [Folder] ([Id])
 )
+
+INSERT INTO [User] ([Id],[Name],[PasswordHash],[PasswordSalt],[Email],[CreatedDate],[ModifiedDate],[IsActive])
+VALUES (1,'christian','index','index','admin@gmail.com','2022-05-24','2022-05-24',1)
+
+INSERT INTO [Folder] ([Id],[Name],[Path],[Size],[CreateDate],[UserId],[IsDeleted],[DeletedDate])
+VALUES (1,'BBB','C:\Users\Christian\Desktop\Project\FileManagerAngularAsp',0,'2022-05-24',1,0,NULL)
+
+select * from [User]
+select * from [Folder]
