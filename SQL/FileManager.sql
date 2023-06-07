@@ -45,3 +45,5 @@ VALUES ('christian','index','index','admin@gmail.com','2022-05-24','2022-05-24',
 
 INSERT INTO [Folder] ([Id],[Name],[Path],[Size],[CreateDate],[UserId],[IsDeleted],[DeletedDate])
 VALUES (1,'BBB','C:\Users\Christian\Desktop\Project\FileManagerAngularAsp',0,'2022-05-24',1,0,NULL)
+
+select * from [Folder]
