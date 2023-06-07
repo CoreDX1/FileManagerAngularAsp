@@ -1,22 +1,28 @@
 ﻿namespace File.Domain.Entities;
 
-public partial class Folder
+public partial class Files
 {
     public int Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string Path { get; set; } = null!;
-    public short Size { get; set; }
-    public DateTime CreateDate { get; set; }
-    public int UserId { get; set; }
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedDate { get; set; }
-    public virtual ICollection<Files> Files { get; set; } = new List<Files>();
-    public virtual User User { get; set; } = null!;
 
-    public Folder()
-    {
-        IsDeleted = false;
-        CreateDate = DateTime.Now;
-        DeletedDate = null;
-    }
+    public string Name { get; set; } = null!;
+
+    public string Path { get; set; } = null!;
+
+    public DateTime CreateDate { get; set; }
+
+    public short Size { get; set; }
+
+    public string FileFormat { get; set; } = null!;
+
+    public int UserId { get; set; }
+
+    public int FolderId { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public DateTime? DeletedDate { get; set; }
+
+    public virtual Folder Folder { get; set; } = null!;
+
+    public virtual User User { get; set; } = null!;
 }
