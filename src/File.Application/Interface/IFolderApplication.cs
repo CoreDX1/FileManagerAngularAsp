@@ -5,5 +5,6 @@ namespace File.Application.Interface;
 
 public interface IFolderApplication
 {
-    Task<BaseResponse> CreateFolder(FolderRequestDto name);
+    Task<BaseResponse> CreateFolder(FolderRequestDto folderRequest);
+    Task<BaseResponse> GetByName(FolderRequestDto folderRequest);
 }
