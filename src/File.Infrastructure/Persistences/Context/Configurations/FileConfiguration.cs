@@ -8,11 +8,10 @@ public class FileConfiguration : IEntityTypeConfiguration<Files>
 {
     public void Configure(EntityTypeBuilder<Files> builder)
     {
-        builder.HasKey(e => e.Id).HasName("PK__File__3214EC07292BAAC5");
+        builder.HasKey(e => e.Id).HasName("PK__File__3214EC07F36BFCE1");
 
         builder.ToTable("File");
 
-        builder.Property(e => e.Id).ValueGeneratedNever();
         builder.Property(e => e.CreateDate).HasColumnType("datetime");
         builder.Property(e => e.DeletedDate).HasColumnType("datetime");
         builder.Property(e => e.FileFormat).HasMaxLength(50);
@@ -23,13 +22,13 @@ public class FileConfiguration : IEntityTypeConfiguration<Files>
             .WithMany(p => p.Files)
             .HasForeignKey(d => d.FolderId)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName("FK__File__FolderId__5441852A");
+            .HasConstraintName("FK__File__FolderId__628FA481");
 
         builder
             .HasOne(d => d.User)
             .WithMany(p => p.Files)
             .HasForeignKey(d => d.UserId)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName("FK__File__UserId__534D60F1");
+            .HasConstraintName("FK__File__UserId__619B8048");
     }
 }

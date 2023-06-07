@@ -1,4 +1,5 @@
 using File.Domain.Entities;
+using File.Infrastructure.Persistences.Context;
 using File.Infrastructure.Persistences.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -27,17 +28,12 @@ public class FolderRepository : IFolderRepository
         throw new NotImplementedException();
     }
 
-    public async Task<bool> GetByName(string name)
+    public async Task<Folder> GetByName(Folder folder)
     {
-        Folder? result = await this._context.Folders.FirstOrDefaultAsync(x => x.Name == name);
-        if (result == null)
-            return false;
-        return true;
-    }
-
-    public Task<bool> Update(Folder folder)
-    {
-        throw new NotImplementedException();
+        Folder? result = await this._context.Folders.FirstOrDefaultAsync(
+            x => x.Name == folder.Name && x.Path == folder.Path
+        );
+        return result!;
     }
 
     public Task<bool> Update(string folder)

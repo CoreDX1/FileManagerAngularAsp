@@ -1,4 +1,4 @@
-using File.Domain.Entities;
+using File.Infrastructure.Persistences.Context;
 using File.Infrastructure.Persistences.Interfaces;
 
 namespace File.Infrastructure.Persistences.Repository;

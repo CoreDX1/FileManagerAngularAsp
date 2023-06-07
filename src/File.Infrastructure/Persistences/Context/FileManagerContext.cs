@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
+using File.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace File.Domain.Entities;
+namespace File.Infrastructure.Persistences.Context;
 
 public partial class FileManagerContext : DbContext
 {
@@ -9,7 +10,9 @@ public partial class FileManagerContext : DbContext
         : base(options) { }
 
     public virtual DbSet<Files> Files { get; set; }
+
     public virtual DbSet<Folder> Folders { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

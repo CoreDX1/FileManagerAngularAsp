@@ -8,11 +8,10 @@ public class FolderConfiguration : IEntityTypeConfiguration<Folder>
 {
     public void Configure(EntityTypeBuilder<Folder> builder)
     {
-        builder.HasKey(e => e.Id).HasName("PK__Folder__3214EC072F272015");
+        builder.HasKey(e => e.Id).HasName("PK__Folder__3214EC0726ECC716");
 
         builder.ToTable("Folder");
 
-        builder.Property(e => e.Id).ValueGeneratedNever();
         builder.Property(e => e.CreateDate).HasColumnType("datetime");
         builder.Property(e => e.DeletedDate).HasColumnType("datetime");
         builder.Property(e => e.Name).HasMaxLength(255);
@@ -22,6 +21,6 @@ public class FolderConfiguration : IEntityTypeConfiguration<Folder>
             .WithMany(p => p.Folders)
             .HasForeignKey(d => d.UserId)
             .OnDelete(DeleteBehavior.ClientSetNull)
-            .HasConstraintName("FK__Folder__UserId__5070F446");
+            .HasConstraintName("FK__Folder__UserId__5EBF139D");
     }
 }
