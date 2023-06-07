@@ -40,11 +40,8 @@ CREATE TABLE [File](
     FOREIGN KEY ([FolderId]) REFERENCES [Folder] ([Id])
 )
 
-INSERT INTO [User] ([Id],[Name],[PasswordHash],[PasswordSalt],[Email],[CreatedDate],[ModifiedDate],[IsActive])
-VALUES (1,'christian','index','index','admin@gmail.com','2022-05-24','2022-05-24',1)
+INSERT INTO [User] ([Name],[PasswordHash],[PasswordSalt],[Email],[CreatedDate],[ModifiedDate],[IsActive])
+VALUES ('christian','index','index','admin@gmail.com','2022-05-24','2022-05-24',1)
 
 INSERT INTO [Folder] ([Id],[Name],[Path],[Size],[CreateDate],[UserId],[IsDeleted],[DeletedDate])
 VALUES (1,'BBB','C:\Users\Christian\Desktop\Project\FileManagerAngularAsp',0,'2022-05-24',1,0,NULL)
-
-select * from [User]
-select * from [Folder]
