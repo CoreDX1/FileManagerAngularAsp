@@ -18,10 +18,10 @@ public class FolderApplication : IFolderApplication
         this._mapper = mapper;
     }
 
-    public async Task<BaseResponse> CreateFolder(FolderRequestDto name)
+    public async Task<BaseResponse> CreateFolder(FolderRequestDto folderRequest)
     {
         var response = new BaseResponse();
-        Folder folder = this._mapper.Map<Folder>(name);
+        Folder folder = this._mapper.Map<Folder>(folderRequest);
         bool create = await this._unitOfWork.FolderRepository.Create(folder);
         if (create)
         {
@@ -32,6 +32,24 @@ public class FolderApplication : IFolderApplication
         {
             response.Success = false;
             response.Message = "Failed";
+        }
+        return response;
+    }
+
+    public async Task<BaseResponse> GetByName(FolderRequestDto folderRequest)
+    {
+        var response = new BaseResponse();
+        Folder folder = this._mapper.Map<Folder>(folderRequest);
+        var result = await this._unitOfWork.FolderRepository.GetByName(folder);
+        if (result is null)
+        {
+            response.Success = false;
+            response.Message = "La carpeta no se encuentra";
+        }
+        else
+        {
+            response.Success = true;
+            response.Message = "La carpeta se encuentra";
         }
         return response;
     }
