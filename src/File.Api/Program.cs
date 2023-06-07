@@ -1,6 +1,12 @@
+using File.Infrastructure.Extensions;
+using File.Application.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var Configuration = builder.Configuration;
+builder.Services.AddInjectionInfrastructure(Configuration);
+builder.Services.AddInjectionApplication(Configuration);
 
 builder.Services.AddControllers();
 
