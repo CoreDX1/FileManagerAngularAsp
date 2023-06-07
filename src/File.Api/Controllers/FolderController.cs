@@ -22,5 +22,21 @@ namespace src.File.Api.Controllers
             var response = await this.app.CreateFolder(folder);
             return StatusCode(200, response);
         }
+
+        [HttpPost]
+        [Route("search")]
+        public async Task<IActionResult> SearchFolder([FromBody] FolderRequestDto folder)
+        {
+            var response = await this.app.GetByName(folder);
+            return StatusCode(200, response);
+        }
+
+        [HttpGet]
+        [Route("View/{*path}")]
+        public IActionResult View(string path)
+        {
+            var response = this.app.GetRoot(path);
+            return Ok(response);
+        }
     }
 }
