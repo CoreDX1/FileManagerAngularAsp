@@ -36,7 +36,7 @@ namespace src.File.Api.Controllers
         public IActionResult View(string path)
         {
             var response = this.app.GetRoot(path);
-            return Ok(response);
+            return StatusCode(200, response);
         }
     }
 }

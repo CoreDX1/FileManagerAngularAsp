@@ -36,6 +36,14 @@ public class FolderRepository : IFolderRepository
         return result!;
     }
 
+    public Folder GetByPath(string path, string name)
+    {
+        var result = this._context.Folders
+            .AsNoTracking()
+            .Where(x => x.Name == name && x.Path == path);
+        return result.FirstOrDefault()!;
+    }
+
     public Task<bool> Update(string folder)
     {
         throw new NotImplementedException();

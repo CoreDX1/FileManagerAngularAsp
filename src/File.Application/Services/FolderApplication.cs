@@ -2,6 +2,7 @@ using System.Web;
 using AutoMapper;
 using File.Application.Commons.Base;
 using File.Application.DTO.Request.Folder;
+using File.Application.DTO.Response.File;
 using File.Application.DTO.Response.Folder;
 using File.Application.Interface;
 using File.Domain.Entities;
@@ -35,23 +36,42 @@ public class FolderApplication : IFolderApplication
         }
         string[] fileNames = Directory.GetFiles(directoryPath);
         string[] directoryNames = Directory.GetDirectories(directoryPath);
+        var folderTasks = directoryNames.Select(x => ViewFolder(x, Path.GetFileName(x)));
+        var origina = directoryNames.Select(
+            x => new FolderResponseDto() { Name = Path.GetFileName(x), }
+        );
+        response.Directories = folderTasks;
         response.IsSuccess = true;
-        response.Directories = directoryNames.Select(Path.GetFileName).ToList()!;
-        response.Files = fileNames.Select(Path.GetFileName).ToList()!;
         return response;
     }
 
+    private FolderResponseDto ViewFolder(string path, string name)
+    {
+        var info = this._unitOfWork.FolderRepository.GetByPath(path, name);
+        return new FolderResponseDto() { Name = info.Name, UserId = info.UserId };
+    }
+
+    // Modify this method
+    // private async Task<IEnumerable<FolderResponseDto>> GetFolderResponse(string[] directoriesName)
+    // {
+    //     var folderTask = directoriesName.Select(x => ViewFolder(x, Path.GetFileName(x)));
+    //     return await Task.WhenAll(folderTask);
+    // }
+
+
+    //
     public async Task<BaseResponse> CreateFolder(FolderRequestDto folderRequest)
     {
         var response = new BaseResponse();
         Folder folder = this._mapper.Map<Folder>(folderRequest);
         var validate = await GetByName(folderRequest);
-        if (validate is not null)
+        if (validate is null)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_EXISTS;
             return response;
         }
+        Directory.CreateDirectory(Path.Combine(baseDirectory + "\\File", folder.Name));
         bool create = await this._unitOfWork.FolderRepository.Create(folder);
         if (!create)
         {

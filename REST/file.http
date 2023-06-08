@@ -1,0 +1,13 @@
+POST http://localhost:5056/api/Folder/folder HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Ratones",
+  "path": "C:\\Users\\Christian\\Desktop\\File\\Ratones",
+  "size": 12,
+  "userId": 1,
+  "isDeleted": true
+}
+
+### Called All Files
+GET http://localhost:5056/api/Folder/View/File

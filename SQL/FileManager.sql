@@ -47,3 +47,5 @@ INSERT INTO [Folder] ([Id],[Name],[Path],[Size],[CreateDate],[UserId],[IsDeleted
 VALUES (1,'BBB','C:\Users\Christian\Desktop\Project\FileManagerAngularAsp',0,'2022-05-24',1,0,NULL)
 
 select * from [Folder]
+
+DELETE FROM [Folder] WHERE [Id] =4 
