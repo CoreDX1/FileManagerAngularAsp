@@ -38,10 +38,10 @@ public class FolderRepository : IFolderRepository
 
     public Folder GetByPath(string path, string name)
     {
-        var result = this._context.Folders
+        Folder? result = this._context.Folders
             .AsNoTracking()
-            .Where(x => x.Name == name && x.Path == path);
-        return result.FirstOrDefault()!;
+            .FirstOrDefault(x => x.Name == name && x.Path == path);
+        return result!;
     }
 
     public Task<bool> Update(string folder)

@@ -2,7 +2,6 @@ using System.Web;
 using AutoMapper;
 using File.Application.Commons.Base;
 using File.Application.DTO.Request.Folder;
-using File.Application.DTO.Response.File;
 using File.Application.DTO.Response.Folder;
 using File.Application.Interface;
 using File.Domain.Entities;
@@ -26,29 +25,69 @@ public class FolderApplication : IFolderApplication
 
     public RootResponseDto GetRoot(string path)
     {
-        var response = new RootResponseDto();
         string decodedPath = HttpUtility.UrlDecode(path);
         string directoryPath = Path.Combine(baseDirectory, decodedPath);
         if (!Directory.Exists(directoryPath))
         {
-            response.IsSuccess = false;
-            return response;
+            return new RootResponseDto { IsSuccess = false };
         }
         string[] fileNames = Directory.GetFiles(directoryPath);
         string[] directoryNames = Directory.GetDirectories(directoryPath);
+
         var folderTasks = directoryNames.Select(x => ViewFolder(x, Path.GetFileName(x)));
-        var origina = directoryNames.Select(
-            x => new FolderResponseDto() { Name = Path.GetFileName(x), }
-        );
-        response.Directories = folderTasks;
-        response.IsSuccess = true;
-        return response;
+        return new RootResponseDto
+        {
+            IsSuccess = true,
+            Path = directoryPath,
+            TotalSize = AllDirectorySize(directoryNames, fileNames),
+            Author = "Christian",
+            Directories = folderTasks
+        };
+    }
+
+    private long AllDirectorySize(string[] dir, string[] fil)
+    {
+        long size = 0;
+        foreach (var fileInfo in dir)
+        {
+            var directoryInfo = new DirectoryInfo(fileInfo);
+            size += GetDirectorySize(directoryInfo);
+        }
+        foreach (var file in fil)
+        {
+            var fileInfo = new FileInfo(file);
+            size += fileInfo.Length;
+        }
+        return size;
+    }
+
+    // TODO : Method that used recursively
+    private long GetDirectorySize(DirectoryInfo directoryInfo)
+    {
+        long size = 0;
+        var files = directoryInfo.GetFiles();
+        foreach (var file in files)
+        {
+            size += file.Length;
+        }
+        var subdirectories = directoryInfo.GetDirectories();
+        foreach (var subdirectory in subdirectories)
+        {
+            size += GetDirectorySize(subdirectory);
+        }
+        return size;
     }
 
     private FolderResponseDto ViewFolder(string path, string name)
     {
-        var info = this._unitOfWork.FolderRepository.GetByPath(path, name);
-        return new FolderResponseDto() { Name = info.Name, UserId = info.UserId };
+        var folderInfo = this._unitOfWork.FolderRepository.GetByPath(path, name);
+        return new FolderResponseDto()
+        {
+            Name = folderInfo.Name,
+            UserId = folderInfo.UserId,
+            Path = folderInfo.Path,
+            CreateDate = folderInfo.CreateDate
+        };
     }
 
     // Modify this method
