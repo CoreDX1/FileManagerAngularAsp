@@ -7,13 +7,13 @@ POST {{host}}/folder HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Picture",
-  "path": "C:\\Users\\Christian\\Desktop\\File\\Picture",
+  "name": "Test",
+  "path": "C:\\Users\\Christian\\Desktop\\File\\Picture\\Test",
   "size": 12,
   "userId": 1,
   "isDeleted": true
 }
 
 ### Called All Files
-@path = File/Gatos
+@path = File/Picture
 GET {{host}}/View/{{path}} HTTP/1.1

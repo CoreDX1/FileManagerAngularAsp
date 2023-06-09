@@ -65,7 +65,7 @@ public class FolderApplication : IFolderApplication
     private string DirectoryExists(string path)
     {
         string decodedPath = HttpUtility.UrlDecode(path);
-        string directoryPath = Path.Combine(baseDirectory, decodedPath);
+        string directoryPath = Path.Combine(baseDirectory, decodedPath.Replace('/', '\\'));
         if (!Directory.Exists(directoryPath))
         {
             return null!;
@@ -123,13 +123,13 @@ public class FolderApplication : IFolderApplication
         var response = new BaseResponse();
         Folder folder = this._mapper.Map<Folder>(folderRequest);
         var validate = await GetByName(folderRequest);
-        if (validate is null)
+        if (!validate.Success)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_EXISTS;
             return response;
         }
-        Directory.CreateDirectory(Path.Combine(baseDirectory + "\\File", folder.Name));
+        Directory.CreateDirectory(Path.Combine(folder.Path));
         bool create = await this._unitOfWork.FolderRepository.Create(folder);
         if (!create)
         {
@@ -149,7 +149,7 @@ public class FolderApplication : IFolderApplication
         var response = new BaseResponse();
         Folder folder = this._mapper.Map<Folder>(folderRequest);
         var result = await this._unitOfWork.FolderRepository.GetByName(folder);
-        if (result is null)
+        if (result != null)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;

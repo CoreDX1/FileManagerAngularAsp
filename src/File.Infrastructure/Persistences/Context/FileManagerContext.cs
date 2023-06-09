@@ -21,5 +21,10 @@ public partial class FileManagerContext : DbContext
         OnModelCreatingPartial(modelBuilder);
     }
 
+    internal object AsNoTracking()
+    {
+        throw new NotImplementedException();
+    }
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

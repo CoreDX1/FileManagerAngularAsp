@@ -48,4 +48,5 @@ VALUES (1,'BBB','C:\Users\Christian\Desktop\Project\FileManagerAngularAsp',0,'20
 
 select * from [Folder]
 
-DELETE FROM [Folder] WHERE [Id] =4 
+DELETE * FROM [Folder] WHERE [Id] = 11
+select * FROM [Folder] WHERE [Path] = 'C:\Users\Christian\Desktop\File\Picture\Anime'

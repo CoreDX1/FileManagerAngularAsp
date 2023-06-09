@@ -17,7 +17,7 @@ namespace src.File.Api.Controllers
 
         [HttpPost]
         [Route("folder")]
-        public async Task<IActionResult> Get(FolderRequestDto folder)
+        public async Task<IActionResult> Get([FromBody] FolderRequestDto folder)
         {
             var response = await this.app.CreateFolder(folder);
             return StatusCode(200, response);
