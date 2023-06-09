@@ -1,13 +1,19 @@
-POST http://localhost:5056/api/Folder/folder HTTP/1.1
+@hostname = http://localhost
+@port = 5056
+@host = {{hostname}}:{{port}}/api/Folder
+
+### Create Folder
+POST {{host}}/folder HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Ratones",
-  "path": "C:\\Users\\Christian\\Desktop\\File\\Ratones",
+  "name": "Picture",
+  "path": "C:\\Users\\Christian\\Desktop\\File\\Picture",
   "size": 12,
   "userId": 1,
   "isDeleted": true
 }
 
 ### Called All Files
-GET http://localhost:5056/api/Folder/View/File
+@path = File/Gatos
+GET {{host}}/View/{{path}} HTTP/1.1
