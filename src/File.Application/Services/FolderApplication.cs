@@ -23,26 +23,54 @@ public class FolderApplication : IFolderApplication
         this.baseDirectory = @"C:\Users\Christian\Desktop\";
     }
 
-    public RootResponseDto GetRoot(string path)
+    public BaseResponse GetRoot(string path)
+    {
+        var response = new BaseResponse();
+        string directoryPath = DirectoryExists(path);
+
+        // TODO : check if directory exists
+        if (directoryPath == null)
+        {
+            response.Success = false;
+            response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
+            return response;
+        }
+
+        // TODO : check if directory is empty
+        string[] fileNames = Directory.GetFiles(directoryPath);
+        string[] directoryNames = Directory.GetDirectories(directoryPath);
+
+        IList<FolderResponseDto> folderTasks = new List<FolderResponseDto>();
+        foreach (string dir in directoryNames)
+        {
+            var folder = ViewFolder(dir, Path.GetFileName(dir));
+            folderTasks.Add(folder);
+        }
+
+        var rootResponse = new RootResponseDto
+        {
+            Path = directoryPath,
+            TotalSize = AllDirectorySize(directoryNames, fileNames),
+            Author = "Christian",
+            Directories = folderTasks,
+            LastModified = Directory.GetLastWriteTime(directoryPath),
+        };
+
+        response.Success = true;
+        response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
+        response.Data = rootResponse;
+        return response;
+    }
+
+    private string DirectoryExists(string path)
     {
         string decodedPath = HttpUtility.UrlDecode(path);
         string directoryPath = Path.Combine(baseDirectory, decodedPath);
         if (!Directory.Exists(directoryPath))
         {
-            return new RootResponseDto { IsSuccess = false };
+            return null!;
         }
-        string[] fileNames = Directory.GetFiles(directoryPath);
-        string[] directoryNames = Directory.GetDirectories(directoryPath);
-
-        var folderTasks = directoryNames.Select(x => ViewFolder(x, Path.GetFileName(x)));
-        return new RootResponseDto
-        {
-            IsSuccess = true,
-            Path = directoryPath,
-            TotalSize = AllDirectorySize(directoryNames, fileNames),
-            Author = "Christian",
-            Directories = folderTasks
-        };
+        return directoryPath;
     }
 
     private long AllDirectorySize(string[] dir, string[] fil)
@@ -90,15 +118,6 @@ public class FolderApplication : IFolderApplication
         };
     }
 
-    // Modify this method
-    // private async Task<IEnumerable<FolderResponseDto>> GetFolderResponse(string[] directoriesName)
-    // {
-    //     var folderTask = directoriesName.Select(x => ViewFolder(x, Path.GetFileName(x)));
-    //     return await Task.WhenAll(folderTask);
-    // }
-
-
-    //
     public async Task<BaseResponse> CreateFolder(FolderRequestDto folderRequest)
     {
         var response = new BaseResponse();

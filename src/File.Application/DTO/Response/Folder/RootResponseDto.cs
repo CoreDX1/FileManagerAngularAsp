@@ -5,9 +5,8 @@ namespace File.Application.DTO.Response.Folder;
 public class RootResponseDto
 {
     public string? Path { get; set; }
-    public bool IsSuccess { get; set; }
-    public IEnumerable<FolderResponseDto>? Directories { get; set; }
-    public IEnumerable<FileResponseDto>? Files { get; set; }
+    public IEnumerable<FolderResponseDto> Directories { get; set; } = new List<FolderResponseDto>();
+    public IEnumerable<FileResponseDto> Files { get; set; } = new List<FileResponseDto>();
 
     // TODO : Additional information about the root directory
     public long TotalSize { get; set; }
@@ -17,5 +16,4 @@ public class RootResponseDto
     // TODO : Stadistic about the files and directories
     public int FileCount => Files?.Count() ?? 0;
     public int DirectoryCount => Directories?.Count() ?? 0;
-    public long TotalSizeInBytes { get; set; }
 }

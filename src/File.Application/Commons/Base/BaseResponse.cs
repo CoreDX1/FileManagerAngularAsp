@@ -7,6 +7,5 @@ public class BaseResponse
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
-    public List<FileResponseDto>? Files { get; set; }
-    public List<FolderResponseDto>? Folders { get; set; }
+    public RootResponseDto? Data { get; set; }
 }
