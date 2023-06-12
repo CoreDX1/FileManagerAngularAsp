@@ -8,24 +8,10 @@ namespace File.Infrastructure.Persistences.Repository;
 public class FolderRepository : IFolderRepository
 {
     private readonly FileManagerContext _context;
-    private readonly string baseDirectory;
 
     public FolderRepository(FileManagerContext context)
     {
-        this._context = context;
-        this.baseDirectory = @"C:\Users\Christian\Desktop\File";
-    }
-
-    public async Task<bool> Create(Folder folder)
-    {
-        await _context.Folders.AddAsync(folder);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public List<Folder> GetAll()
-    {
-        throw new NotImplementedException();
+        _context = context;
     }
 
     public async Task<Folder> GetByName(Folder folder)
@@ -44,8 +30,31 @@ public class FolderRepository : IFolderRepository
         return result!;
     }
 
-    public Task<bool> Update(string folder)
+    public async Task<bool> Create(Folder folder)
     {
-        throw new NotImplementedException();
+        await _context.Folders.AddAsync(folder);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> Update(Folder folder, string path)
+    {
+        Folder? result = await _context.Folders.FirstAsync(x => x.Path == path);
+        result.Name = folder.Name;
+        result.Path = folder.Path;
+        _context.Update(result);
+        var response = await _context.SaveChangesAsync();
+        return response > 0;
+    }
+
+    public async Task<bool> DeleteFolder(Folder folder)
+    {
+        Folder? result = await GetByName(folder);
+        // Change the info of the folder
+        result.DeletedDate = DateTime.Now;
+        result.IsDeleted = true;
+        _context.Update(result);
+        await _context.SaveChangesAsync();
+        return true;
     }
 }

@@ -38,5 +38,13 @@ namespace src.File.Api.Controllers
             var response = this.app.GetRoot(path);
             return StatusCode(200, response);
         }
+
+        [HttpDelete]
+        [Route("folder/delete")]
+        public async Task<IActionResult> Delete([FromBody] FolderRequestDto folder)
+        {
+            var response = await this.app.Delete(folder);
+            return StatusCode(200, response);
+        }
     }
 }

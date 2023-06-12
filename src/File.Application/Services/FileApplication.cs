@@ -15,26 +15,19 @@ public class FileApplication : IFileApplication
 
     public FileApplication(IMapper mapper, IUnitOfWork unitOfWork)
     {
-        this._mapper = mapper;
-        this._unitOfWork = unitOfWork;
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<BaseResponse> CreateFile(FileRequestDto fileRequest)
     {
         var response = new BaseResponse();
         Files file = _mapper.Map<Files>(fileRequest);
-
-        BaseResponse valid = await GetByName(fileRequest);
-        if (!valid.Success)
-        {
-            response.Success = false;
-            response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
-            return response;
-        }
+        BaseResponse valid = GetByName(fileRequest);
 
         // Create File
         bool files = await _unitOfWork.FileRepository.Create(file);
-        if (!files)
+        if (!files && !valid.Success)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_SAVE_ERROR;
@@ -47,11 +40,11 @@ public class FileApplication : IFileApplication
         return response;
     }
 
-    public async Task<BaseResponse> GetByName(FileRequestDto fileRequest)
+    public BaseResponse GetByName(FileRequestDto fileRequest)
     {
         var response = new BaseResponse();
         Files? file = _mapper.Map<Files>(fileRequest);
-        Files files = await this._unitOfWork.FileRepository.GetByName(file);
+        Files files = _unitOfWork.FileRepository.GetByPath(file.Path, file.Name);
         if (files == null)
         {
             response.Success = false;

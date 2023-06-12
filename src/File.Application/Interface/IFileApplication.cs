@@ -6,5 +6,5 @@ namespace File.Application.Interface;
 public interface IFileApplication
 {
     Task<BaseResponse> CreateFile(FileRequestDto fileRequest);
-    Task<BaseResponse> GetByName(FileRequestDto fileRequest);
+    BaseResponse GetByName(FileRequestDto fileRequest);
 }

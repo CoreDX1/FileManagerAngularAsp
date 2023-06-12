@@ -8,6 +8,7 @@ public class ReplyMessage
     public const string MESSAGE_SAVE_ERROR = "Error al guardar el archivo";
     public const string MESSAGE_UPDATE_SUCCESS = "Archivo actualizado correctamente";
     public const string MESSAGE_DELETE_SUCCESS = "Archivo eliminado correctamente";
+    public const string MESSAGE_DELETE_ERROR = "Error al eliminar el archivo";
     public const string MESSAGE_EXISTS = "El archivo ya existe";
     public const string MESSAGE_ACTIVATE_SUCCESS = "Archivo activado correctamente";
     public const string MESSAGE_TOKEN_GENERATED = "Token generado correctamente";

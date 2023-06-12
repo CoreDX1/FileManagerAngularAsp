@@ -8,4 +8,5 @@ public interface IFileRepository
     public Task<bool> Update(string file);
     public Files GetByPath(string path, string name);
     public Task<Files> GetByName(Files folder);
+    public Task<bool> Delete(string file);
 }

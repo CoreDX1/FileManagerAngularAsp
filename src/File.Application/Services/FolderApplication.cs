@@ -18,9 +18,9 @@ public class FolderApplication : IFolderApplication
 
     public FolderApplication(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        this._unitOfWork = unitOfWork;
-        this._mapper = mapper;
-        this.baseDirectory = @"C:\Users\Christian\Desktop\";
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+        baseDirectory = @"C:\Users\Christian\Desktop\";
     }
 
     public BaseResponse GetRoot(string path)
@@ -47,6 +47,11 @@ public class FolderApplication : IFolderApplication
             folderTasks.Add(folder);
         }
 
+        folderTasks = folderTasks
+            .Where(x => x.IsDeleted == false)
+            .OrderByDescending(x => x.CreateDate)
+            .ToList();
+
         var rootResponse = new RootResponseDto
         {
             Path = directoryPath,
@@ -67,9 +72,7 @@ public class FolderApplication : IFolderApplication
         string decodedPath = HttpUtility.UrlDecode(path);
         string directoryPath = Path.Combine(baseDirectory, decodedPath.Replace('/', '\\'));
         if (!Directory.Exists(directoryPath))
-        {
             return null!;
-        }
         return directoryPath;
     }
 
@@ -108,30 +111,27 @@ public class FolderApplication : IFolderApplication
 
     private FolderResponseDto ViewFolder(string path, string name)
     {
-        var folderInfo = this._unitOfWork.FolderRepository.GetByPath(path, name);
+        var folderInfo = _unitOfWork.FolderRepository.GetByPath(path, name);
         return new FolderResponseDto()
         {
             Name = folderInfo.Name,
             UserId = folderInfo.UserId,
             Path = folderInfo.Path,
-            CreateDate = folderInfo.CreateDate
+            CreateDate = folderInfo.CreateDate,
+            DeletedDate = folderInfo.DeletedDate,
+            IsDeleted = folderInfo.IsDeleted
         };
     }
 
     public async Task<BaseResponse> CreateFolder(FolderRequestDto folderRequest)
     {
         var response = new BaseResponse();
-        Folder folder = this._mapper.Map<Folder>(folderRequest);
+        Folder folder = _mapper.Map<Folder>(folderRequest);
         var validate = await GetByName(folderRequest);
-        if (!validate.Success)
-        {
-            response.Success = false;
-            response.Message = ReplyMessage.MESSAGE_EXISTS;
-            return response;
-        }
+
         Directory.CreateDirectory(Path.Combine(folder.Path));
-        bool create = await this._unitOfWork.FolderRepository.Create(folder);
-        if (!create)
+        bool create = await _unitOfWork.FolderRepository.Create(folder);
+        if (!create && !validate.Success)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_SAVE_ERROR;
@@ -147,8 +147,8 @@ public class FolderApplication : IFolderApplication
     public async Task<BaseResponse> GetByName(FolderRequestDto folderRequest)
     {
         var response = new BaseResponse();
-        Folder folder = this._mapper.Map<Folder>(folderRequest);
-        var result = await this._unitOfWork.FolderRepository.GetByName(folder);
+        Folder folder = _mapper.Map<Folder>(folderRequest);
+        var result = await _unitOfWork.FolderRepository.GetByName(folder);
         if (result != null)
         {
             response.Success = false;
@@ -158,6 +158,24 @@ public class FolderApplication : IFolderApplication
         {
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
+        }
+        return response;
+    }
+
+    public async Task<BaseResponse> Delete(FolderRequestDto folderRequest)
+    {
+        var response = new BaseResponse();
+        Folder folder = _mapper.Map<Folder>(folderRequest);
+        var result = await _unitOfWork.FolderRepository.DeleteFolder(folder);
+        if (!result)
+        {
+            response.Success = false;
+            response.Message = ReplyMessage.MESSAGE_DELETE_ERROR;
+        }
+        else
+        {
+            response.Success = true;
+            response.Message = ReplyMessage.MESSAGE_DELETE_SUCCESS;
         }
         return response;
     }
