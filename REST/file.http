@@ -7,14 +7,14 @@ POST {{host}}/folder HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "CCC",
-  "path": "C:\\Users\\Christian\\Desktop\\File\\BBB\\CCC",
+  "name": "DDD",
+  "path": "C:\\Users\\Christian\\Desktop\\File\\DDD",
   "size": 12,
   "userId": 1
 }
 
 ### Called All Files
-@path = File/BBB
+@path = File
 GET {{host}}/View/{{path}} HTTP/1.1
 
 ### Delete Folder
@@ -25,3 +25,7 @@ Content-Type: application/json
    "name": "AAA",
    "path": "C:\\Users\\Christian\\Desktop\\File\\AAA"
 }
+
+### Search File
+@path = A
+GET {{host}}/folder/{{path}} HTTP/1.1

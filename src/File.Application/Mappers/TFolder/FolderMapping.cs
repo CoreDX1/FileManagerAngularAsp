@@ -1,5 +1,6 @@
 using AutoMapper;
 using File.Application.DTO.Request.Folder;
+using File.Application.DTO.Response.Folder;
 using File.Domain.Entities;
 
 namespace File.Application.Mappers.TFolder;
@@ -10,5 +11,8 @@ public class FolderMapping : Profile
     {
         // * Request
         CreateMap<FolderRequestDto, Folder>();
+
+        // * Response
+        CreateMap<Folder, FolderResponseDto>();
     }
 }

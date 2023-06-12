@@ -7,6 +7,4 @@ public class FolderResponseDto
     public short Size { get; set; }
     public DateTime CreateDate { get; set; }
     public int UserId { get; set; }
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedDate { get; set; }
 }

@@ -14,10 +14,10 @@ public class FolderRepository : IFolderRepository
         _context = context;
     }
 
-    public async Task<Folder> GetByName(Folder folder)
+    public async Task<Folder> GetByName(string name, string path)
     {
         Folder? result = await this._context.Folders.FirstOrDefaultAsync(
-            x => x.Name == folder.Name && x.Path == folder.Path
+            x => x.Name == name && x.Path == path
         );
         return result!;
     }
@@ -47,14 +47,20 @@ public class FolderRepository : IFolderRepository
         return response > 0;
     }
 
-    public async Task<bool> DeleteFolder(Folder folder)
+    public async Task<Folder> DeleteFolder(Folder folder)
     {
-        Folder? result = await GetByName(folder);
+        Folder? result = await GetByName(folder.Name, folder.Path);
         // Change the info of the folder
         result.DeletedDate = DateTime.Now;
         result.IsDeleted = true;
         _context.Update(result);
         await _context.SaveChangesAsync();
-        return true;
+        return result;
+    }
+
+    public async Task<IEnumerable<Folder>> SearchByContent(string searchQuery)
+    {
+        var result = await _context.Folders.Where(x => x.Name.Contains(searchQuery)).ToListAsync();
+        return result;
     }
 }

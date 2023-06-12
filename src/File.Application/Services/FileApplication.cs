@@ -19,11 +19,11 @@ public class FileApplication : IFileApplication
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<BaseResponse> CreateFile(FileRequestDto fileRequest)
+    public async Task<BaseResponse<Files>> CreateFile(FileRequestDto fileRequest)
     {
-        var response = new BaseResponse();
+        var response = new BaseResponse<Files>();
         Files file = _mapper.Map<Files>(fileRequest);
-        BaseResponse valid = GetByName(fileRequest);
+        var valid = GetByName(fileRequest);
 
         // Create File
         bool files = await _unitOfWork.FileRepository.Create(file);
@@ -36,13 +36,14 @@ public class FileApplication : IFileApplication
         {
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_SAVE_SUCCESS;
+            response.Data = valid.Data;
         }
         return response;
     }
 
-    public BaseResponse GetByName(FileRequestDto fileRequest)
+    public BaseResponse<Files> GetByName(FileRequestDto fileRequest)
     {
-        var response = new BaseResponse();
+        var response = new BaseResponse<Files>();
         Files? file = _mapper.Map<Files>(fileRequest);
         Files files = _unitOfWork.FileRepository.GetByPath(file.Path, file.Name);
         if (files == null)
@@ -54,6 +55,7 @@ public class FileApplication : IFileApplication
         {
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
+            response.Data = files;
         }
         return response;
     }
