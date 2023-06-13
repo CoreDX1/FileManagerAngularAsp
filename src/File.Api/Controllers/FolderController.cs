@@ -2,7 +2,6 @@ using File.Application.Commons.Base;
 using File.Application.DTO.Request.Folder;
 using File.Application.DTO.Response.Folder;
 using File.Application.Interface;
-using File.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace src.File.Api.Controllers
@@ -18,8 +17,8 @@ namespace src.File.Api.Controllers
             this.app = app;
         }
 
-        [HttpGet] // GET : view/file
-        [Route("view/{*path}")]
+        [HttpGet] // GET : api/folder/view/File/details
+        [Route("view/{path}/details")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(BaseResponse<RootResponseDto>)
@@ -30,7 +29,7 @@ namespace src.File.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet] // GET : api/folder/searchByContent/AA
+        [HttpGet] // GET : api/folder/searchbycontent/AAA
         [Route("searchByContent/{*path}")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
