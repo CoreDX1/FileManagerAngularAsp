@@ -27,5 +27,5 @@ Content-Type: application/json
 }
 
 ### Search File
-@path = A
+@path = Ani
 GET {{host}}/folder/{{path}} HTTP/1.1
