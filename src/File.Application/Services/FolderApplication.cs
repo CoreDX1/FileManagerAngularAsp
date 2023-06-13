@@ -77,9 +77,15 @@ public class FolderApplication : IFolderApplication
         var response = new BaseResponse<Folder>();
         Folder folder = _mapper.Map<Folder>(folderRequest);
         var validate = await GetByName(folderRequest.Name!, folderRequest.Path!);
+        if (!validate.Success)
+        {
+            response.Success = false;
+            response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
+            return response;
+        }
         Directory.CreateDirectory(Path.Combine(folder.Path));
         bool create = await _unitOfWork.FolderRepository.Create(folder);
-        if (!create && !validate.Success)
+        if (!create)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_SAVE_ERROR;
@@ -96,7 +102,7 @@ public class FolderApplication : IFolderApplication
     public async Task<BaseResponse<Folder>> GetByName(string name, string path)
     {
         var response = new BaseResponse<Folder>();
-        var result = await _unitOfWork.FolderRepository.GetByName(name, path);
+        Folder? result = await _unitOfWork.FolderRepository.GetByName(name, path);
         if (result != null)
         {
             response.Success = false;

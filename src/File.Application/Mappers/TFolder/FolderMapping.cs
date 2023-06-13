@@ -11,6 +11,7 @@ public class FolderMapping : Profile
     {
         // * Request
         CreateMap<FolderRequestDto, Folder>();
+        CreateMap<FolderCreateRequestDto, Folder>();
 
         // * Response
         CreateMap<Folder, FolderResponseDto>();
