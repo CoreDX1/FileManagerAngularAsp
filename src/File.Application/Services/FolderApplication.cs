@@ -1,4 +1,3 @@
-using System.Web;
 using AutoMapper;
 using File.Application.Commons.Base;
 using File.Application.DTO.Request.Folder;
@@ -15,18 +14,24 @@ public class FolderApplication : IFolderApplication
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly string baseDirectory;
+    private readonly UtilsApplication _utilsApplication;
 
-    public FolderApplication(IUnitOfWork unitOfWork, IMapper mapper)
+    public FolderApplication(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        UtilsApplication utilsApplication
+    )
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         baseDirectory = @"C:\Users\Christian\Desktop\";
+        _utilsApplication = utilsApplication;
     }
 
     public BaseResponse<RootResponseDto> GetRoot(string path)
     {
         var response = new BaseResponse<RootResponseDto>();
-        string directoryPath = DirectoryExists(path);
+        string directoryPath = _utilsApplication.DirectoryExists(path);
 
         // TODO : check if directory exists
         if (directoryPath == null)
@@ -43,7 +48,7 @@ public class FolderApplication : IFolderApplication
         IList<Folder> folderTasks = new List<Folder>();
         foreach (string dir in directoryNames)
         {
-            var folder = ViewFolder(dir, Path.GetFileName(dir));
+            var folder = _utilsApplication.ViewFolder(dir, Path.GetFileName(dir));
             folderTasks.Add(folder);
         }
 
@@ -55,7 +60,7 @@ public class FolderApplication : IFolderApplication
         var rootResponse = new RootResponseDto
         {
             Path = directoryPath,
-            TotalSize = AllDirectorySize(directoryNames, fileNames),
+            TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
             Author = "Christian",
             Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
             LastModified = Directory.GetLastWriteTime(directoryPath),
@@ -65,60 +70,6 @@ public class FolderApplication : IFolderApplication
         response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
         response.Data = rootResponse;
         return response;
-    }
-
-    private string DirectoryExists(string path)
-    {
-        string decodedPath = HttpUtility.UrlDecode(path);
-        string directoryPath = Path.Combine(baseDirectory, decodedPath.Replace('/', '\\'));
-        if (!Directory.Exists(directoryPath))
-            return null!;
-        return directoryPath;
-    }
-
-    private long AllDirectorySize(string[] dir, string[] fil)
-    {
-        long size = 0;
-        foreach (var fileInfo in dir)
-        {
-            var directoryInfo = new DirectoryInfo(fileInfo);
-            size += GetDirectorySize(directoryInfo);
-        }
-        foreach (var file in fil)
-        {
-            var fileInfo = new FileInfo(file);
-            size += fileInfo.Length;
-        }
-        return size;
-    }
-
-    // TODO : Method that used recursively
-    private long GetDirectorySize(DirectoryInfo directoryInfo)
-    {
-        long size = 0;
-        var files = directoryInfo.GetFiles();
-        foreach (var file in files)
-        {
-            size += file.Length;
-        }
-        var subdirectories = directoryInfo.GetDirectories();
-        foreach (var subdirectory in subdirectories)
-        {
-            size += GetDirectorySize(subdirectory);
-        }
-        return size;
-    }
-
-    private Folder ViewFolder(string path, string name)
-    {
-        var folderInfo = _unitOfWork.FolderRepository.GetByPath(path, name);
-        return new Folder()
-        {
-            Name = folderInfo.Name,
-            UserId = folderInfo.UserId,
-            Path = folderInfo.Path,
-            CreateDate = folderInfo.CreateDate,
-        };
     }
 
     public async Task<BaseResponse<Folder>> CreateFolder(FolderCreateRequestDto folderRequest)
