@@ -8,12 +8,18 @@ public class UnitOfWork : IUnitOfWork
     private readonly FileManagerContext _context;
     public IFolderRepository FolderRepository { get; }
     public IFileRepository FileRepository { get; }
+    public IUserRepository UserRepository { get; }
 
-    public UnitOfWork(IFolderRepository folderRepository, FileManagerContext context)
+    public UnitOfWork(
+        IFolderRepository folderRepository,
+        FileManagerContext context,
+        IUserRepository userRepository
+    )
     {
         this._context = context;
         this.FolderRepository = new FolderRepository(context);
         this.FileRepository = new FileRepository(context);
+        this.UserRepository = new UserRepository(context);
     }
 
     public void Dispose()

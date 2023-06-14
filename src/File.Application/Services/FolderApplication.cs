@@ -66,10 +66,12 @@ public class FolderApplication : IFolderApplication
             LastModified = Directory.GetLastWriteTime(directoryPath),
         };
 
-        response.Success = true;
-        response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
-        response.Data = rootResponse;
-        return response;
+        return new BaseResponse<RootResponseDto>()
+        {
+            Success = true,
+            Message = ReplyMessage.MESSAGE_QUERY_SUCCESS,
+            Data = rootResponse
+        };
     }
 
     public async Task<BaseResponse<Folder>> CreateFolder(FolderCreateRequestDto folderRequest)
