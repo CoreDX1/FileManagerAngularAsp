@@ -16,6 +16,7 @@ public static class InjectionExtensions
         services.AddSingleton(configuration);
         services.AddScoped<IFolderApplication, FolderApplication>();
         services.AddScoped<UtilsApplication>();
+        services.AddScoped<IUserApplication, UserApplication>();
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
