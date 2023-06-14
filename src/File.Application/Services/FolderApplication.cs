@@ -1,3 +1,4 @@
+using System.Web;
 using AutoMapper;
 using File.Application.Commons.Base;
 using File.Application.DTO.Request.Folder;
@@ -24,16 +25,17 @@ public class FolderApplication : IFolderApplication
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        baseDirectory = @"C:\Users\Christian\Desktop\";
+        baseDirectory = @"C:\Users\Christian\Desktop\File\";
         _utilsApplication = utilsApplication;
     }
 
-    public BaseResponse<RootResponseDto> GetRoot(string path)
+    public BaseResponse<RootResponseDto> CloneGetRoot(string name)
     {
         var response = new BaseResponse<RootResponseDto>();
-        string directoryPath = _utilsApplication.DirectoryExists(path);
+        // TODO : check if directory exists == gmail
+        string directoryPath = _utilsApplication.DirectoryExists(name);
+        Console.WriteLine(directoryPath);
 
-        // TODO : check if directory exists
         if (directoryPath == null)
         {
             response.Success = false;
@@ -60,6 +62,57 @@ public class FolderApplication : IFolderApplication
         var rootResponse = new RootResponseDto
         {
             Path = directoryPath,
+            TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
+            Author = name,
+            Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
+            LastModified = Directory.GetLastWriteTime(directoryPath),
+        };
+
+        return new BaseResponse<RootResponseDto>()
+        {
+            Success = true,
+            Message = ReplyMessage.MESSAGE_QUERY_SUCCESS,
+            Data = rootResponse
+        };
+    }
+
+    public BaseResponse<RootResponseDto> GetRoot(string name, string file)
+    {
+        var response = new BaseResponse<RootResponseDto>();
+        // TODO : check if directory exists == gmail
+        string directoryPath = _utilsApplication.DirectoryExists(name);
+        Console.WriteLine(directoryPath);
+
+        if (directoryPath == null)
+        {
+            response.Success = false;
+            response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
+            return response;
+        }
+
+        // TODO : check if directory is empty
+        string decodedPath = HttpUtility.UrlDecode(file);
+        string newDirectoryPath = Path.Combine(directoryPath, decodedPath.Replace('/', '\\'));
+
+        // TODO : check if directory is empty
+        string[] fileNames = Directory.GetFiles(newDirectoryPath);
+        string[] directoryNames = Directory.GetDirectories(newDirectoryPath);
+
+        IList<Folder> folderTasks = new List<Folder>();
+        foreach (string dir in directoryNames)
+        {
+            var folder = _utilsApplication.ViewFolder(dir, Path.GetFileName(dir));
+            folderTasks.Add(folder);
+        }
+
+        folderTasks = folderTasks
+            .Where(x => x.IsDeleted == false)
+            .OrderByDescending(x => x.CreateDate)
+            .ToList();
+
+        var rootResponse = new RootResponseDto
+        {
+            Path = newDirectoryPath,
             TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
             Author = "Christian",
             Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),

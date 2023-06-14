@@ -11,17 +11,17 @@ public class UtilsApplication
 
     public UtilsApplication(IUnitOfWork unitOfWork)
     {
-        baseDirectory = @"C:\Users\Christian\Desktop\";
+        baseDirectory = @"C:\Users\Christian\Desktop\File\";
         _unitOfWork = unitOfWork;
     }
 
     public string DirectoryExists(string path)
     {
         string decodedPath = HttpUtility.UrlDecode(path);
-        string directoryPath = Path.Combine(baseDirectory, decodedPath.Replace('/', '\\'));
-        if (!Directory.Exists(directoryPath))
+        string newDirectoryPath = Path.Combine(baseDirectory, decodedPath);
+        if (!Directory.Exists(newDirectoryPath))
             return null!;
-        return directoryPath;
+        return newDirectoryPath;
     }
 
     public long AllDirectorySize(string[] dir, string[] fil)

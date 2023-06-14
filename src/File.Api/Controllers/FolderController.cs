@@ -18,14 +18,26 @@ namespace src.File.Api.Controllers
         }
 
         [HttpGet] // GET : api/folder/view/File/details
-        [Route("view/{path}/details")]
+        [Route("view/{user}/{*file}")]
         [ProducesResponseType(
             StatusCodes.Status200OK,
             Type = typeof(BaseResponse<RootResponseDto>)
         )]
-        public IActionResult ViewFiles(string path)
+        public IActionResult ViewFiles(string user, string file)
         {
-            var response = this.app.GetRoot(path);
+            var response = this.app.GetRoot(user, file);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("view/{user}")]
+        [ProducesResponseType(
+            StatusCodes.Status200OK,
+            Type = typeof(BaseResponse<RootResponseDto>)
+        )]
+        public IActionResult ViewFiles(string user)
+        {
+            var response = this.app.CloneGetRoot(user);
             return Ok(response);
         }
 

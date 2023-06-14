@@ -9,7 +9,8 @@ public interface IFolderApplication
 {
     Task<BaseResponse<Folder>> CreateFolder(FolderCreateRequestDto folderRequest);
     Task<BaseResponse<Folder>> GetByName(string name, string path);
-    BaseResponse<RootResponseDto> GetRoot(string path);
+    BaseResponse<RootResponseDto> GetRoot(string user, string file);
     Task<BaseResponse<FolderResponseDto>> Delete(FolderRequestDto folderRequest);
     Task<BaseResponse<IEnumerable<Folder>>> SearchByContent(string searchQuery);
+    BaseResponse<RootResponseDto> CloneGetRoot(string name);
 }
