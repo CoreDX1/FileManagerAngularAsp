@@ -56,4 +56,4 @@
 * Angular
 
 ### Angular
-![Alt text](imagen/angular.png)
+![Alt text](imagen/angular.PNG)
