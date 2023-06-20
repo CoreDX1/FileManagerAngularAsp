@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using File.Application.DTO.Response.Folder;
 
 namespace File.Application.Commons.Base;
 
