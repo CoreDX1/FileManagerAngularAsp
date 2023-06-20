@@ -47,6 +47,7 @@
 * SQL Server
 * Swagger
 * FluentValidation 
+* Dotnet Ef
 
 ### Asp.Net Core
 ![Alt text](imagen/image.png)
