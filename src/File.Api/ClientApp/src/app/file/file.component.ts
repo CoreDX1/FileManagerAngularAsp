@@ -33,7 +33,6 @@ export class FileComponent implements OnInit {
     };
 
     public menu: IMenu[] = [
-        { name: "Create" },
         { name: "Delete" },
         { name: "Rename" },
         { name: "Home" }
@@ -57,6 +56,9 @@ export class FileComponent implements OnInit {
         return this.formatedFile[fileExtension];
     }
 
+    public getValue = (name: string): void => {
+        console.log(name);
+    };
     public handleClickRefresh(): void {
         this.snip = true;
         setTimeout(() => {
@@ -83,9 +85,8 @@ export class FileComponent implements OnInit {
         const year = fecha.getFullYear();
         const hour = fecha.getHours();
         const minute = fecha.getMinutes();
-        const dateFor =
-            day + "/" + month + "/" + year + " " + hour + ":" + minute;
-        return dateFor;
+        const minuteFormated = minute < 10 ? "0" + minute : minute;
+        return `${day}/${month}/${year} ${hour}:${minuteFormated}`;
     }
 
     public handleClickFilePrev(): void {
