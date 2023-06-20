@@ -22,19 +22,37 @@
   </p>
 </div>
 
-### Swagger
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">Acerca del proyecto</a>
+      <ul>
+        <li><a href="#tecnologias-usadas">Tecnogias usadas</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#imagen">Imagenes</a>
+      <ul>
+        <li><a href="#aspnet-core">Asp.Net Core</a></li>
+        <li><a href="#angular">Angular</a></li>
+      </ul>
+    </li>
+  </ol>
 
+### Tecnologias usadas
+
+#### BackEnd
+* Asp.Net Core 7.0
+* Entity Framework Core
+* SQL Server
+* Swagger
+* FluentValidation 
+
+### Asp.Net Core
 ![Alt text](imagen/image.png)
 
-### Build With
+#### FrontEnd 
+* Angular
 
-En esta sección deberías enumerar los principales frameworks/bibliotecas utilizados para arrancar tu proyecto. Deja los complementos/plugins para la sección de agradecimientos. He aquí algunos ejemplos.
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+### Angular
+![Alt text](imagen/angular.png)
