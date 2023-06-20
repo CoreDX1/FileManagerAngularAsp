@@ -23,6 +23,7 @@ public class UserApplication : IUserApplication
     public async Task<BaseResponse<UserRegisterResponseDto>> AddUser(UserRegisterRequestDto user)
     {
         var response = new BaseResponse<UserRegisterResponseDto>();
+
         var validUser = await GetUserByEmail(user.Email);
         if (!validUser.Success)
         {
@@ -32,6 +33,11 @@ public class UserApplication : IUserApplication
         }
 
         User userEntity = this._mapper.Map<User>(user);
+        string path = @"C:\Users\Christian\Desktop\File";
+
+        userEntity.PasswordSalt = Guid.NewGuid().ToString().Replace("-", "");
+        var combinatePath = Path.Combine(path, userEntity.PasswordSalt);
+        Directory.CreateDirectory(combinatePath);
         bool result = await this._userRepository.AddUser(userEntity);
         if (!result)
         {
@@ -61,6 +67,25 @@ public class UserApplication : IUserApplication
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
             response.Data = this._mapper.Map<UserRegisterResponseDto>(user);
+        }
+        return response;
+    }
+
+    public async Task<BaseResponse<string>> LoginUser(UserLoginRequestDto user)
+    {
+        var response = new BaseResponse<string>();
+        User userMapper = this._mapper.Map<User>(user);
+        string code = await this._userRepository.LoginUser(userMapper);
+        if (code == null)
+        {
+            response.Success = false;
+            response.Message = ReplyMessage.MESSAGE_AUTH_TYPE;
+        }
+        else
+        {
+            response.Success = true;
+            response.Message = ReplyMessage.MESSAGE_AUTH_SUCCESS;
+            response.Data = code;
         }
         return response;
     }

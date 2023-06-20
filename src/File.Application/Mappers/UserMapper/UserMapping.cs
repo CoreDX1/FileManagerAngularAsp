@@ -11,6 +11,7 @@ public class UserMapping : Profile
     {
         // * Request
         CreateMap<UserRegisterRequestDto, User>();
+        CreateMap<UserLoginRequestDto, User>();
 
         // * Response
         CreateMap<User, UserRegisterResponseDto>();
