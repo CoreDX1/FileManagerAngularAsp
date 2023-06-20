@@ -34,13 +34,16 @@
                     class="gap-1 flex align-middle p-2 border shadow-md hover:bg-blue-100"
                 >
                     <img src="../../assets/Imagen/folder.svg" alt="directory" />
-                    <p
-                        role="none"
-                        class="cursor-pointer text-3xl font-bold w-full self-center"
-                        (click)="handleClickFileNext(directory.name)"
-                    >
-                        {{ directory.name }}
-                    </p>
+                    <div>
+                        <p
+                            role="none"
+                            class="cursor-pointer text-3xl font-bold w-full self-center"
+                            (click)="handleClickFileNext(directory.name)"
+                        >
+                            {{ directory.name }}
+                        </p>
+                        <p>{{ dateFormater(directory.createDate) }}</p>
+                    </div>
                 </section>
                 <div class="gap-1 flex align-middle p-2 border shadow-md">
                     <img src="../../assets/Imagen/folder.svg" alt="folder" />

@@ -76,6 +76,18 @@ export class FileComponent implements OnInit {
         this.getNameFile();
     }
 
+    public dateFormater(datae: string): string {
+        const fecha = new Date(datae);
+        const day = fecha.getDate();
+        const month = fecha.getMonth() + 1;
+        const year = fecha.getFullYear();
+        const hour = fecha.getHours();
+        const minute = fecha.getMinutes();
+        const dateFor =
+            day + "/" + month + "/" + year + " " + hour + ":" + minute;
+        return dateFor;
+    }
+
     public handleClickFilePrev(): void {
         const index = this.url.lastIndexOf("/");
         const prev = this.url.substring(0, index);
