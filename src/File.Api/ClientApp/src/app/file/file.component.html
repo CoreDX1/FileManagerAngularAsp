@@ -30,16 +30,16 @@
             <p class="text-4xl font-semibold pb-5">Folders</p>
             <div class="grid grid-rows-2 grid-cols-5 gap-3 max-w-8xl">
                 <section
-                    *ngFor="let directory of AllFiles.directory"
+                    *ngFor="let directory of AllFiles.data.directories"
                     class="gap-1 flex align-middle p-2 border shadow-md hover:bg-blue-100"
                 >
                     <img src="../../assets/Imagen/folder.svg" alt="directory" />
                     <p
                         role="none"
                         class="cursor-pointer text-3xl font-bold w-full self-center"
-                        (click)="handleClickFileNext(directory)"
+                        (click)="handleClickFileNext(directory.name)"
                     >
-                        {{ directory }}
+                        {{ directory.name }}
                     </p>
                 </section>
                 <div class="gap-1 flex align-middle p-2 border shadow-md">
@@ -57,7 +57,7 @@
                 <p class="text-4xl font-semibold pb-5">Files</p>
                 <div class="grid grid-rows-2 grid-cols-4 gap-3">
                     <section
-                        *ngFor="let file of AllFiles.files"
+                        *ngFor="let file of AllFiles.data.files"
                         class="flex gap-1 align-middle p-2 border rounded-xl border-black shadow-md hover:bg-blue-100"
                     >
                         <img [src]="getIconPath(file)" alt="" />

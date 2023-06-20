@@ -7,10 +7,11 @@ import { HttpClient } from "@angular/common/http";
     providedIn: "root"
 })
 export class DataService {
-    private urlApi = "http://localhost:5056/api/folder/view/camilo%40gmail.com";
+    private urlApi = "http://localhost:5056/api/folder/view/camilo@gmail.com";
     constructor(private http: HttpClient) {}
 
     getAllFiles(path = ""): Observable<IFile> {
-        return this.http.get<IFile>(`${this.urlApi}/${path}`);
+        const data = this.http.get<IFile>(`${this.urlApi}/${path}`);
+        return data;
     }
 }

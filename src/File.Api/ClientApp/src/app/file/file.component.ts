@@ -48,6 +48,7 @@ export class FileComponent implements OnInit {
     private getNameFile(): void {
         this.DataSvc.getAllFiles(this.url).subscribe((data) => {
             this.AllFiles = data;
+            console.log(this.AllFiles, data);
         });
     }
 
