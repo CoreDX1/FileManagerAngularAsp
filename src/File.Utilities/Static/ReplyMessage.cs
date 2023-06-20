@@ -17,4 +17,5 @@ public class ReplyMessage
     public const string MESSAGE_VALIDATION_ERRORS = "Errores de validación";
     public const string MESSAGE_OPERATION_FAILED = "Operación fallida";
     public const string MESSAGE_AUTH_TYPE = "Su cuenta no se encuentra registrada en el sistema";
+    public const string MESSAGE_AUTH_SUCCESS = "Acceso concedido es correcto";
 }
