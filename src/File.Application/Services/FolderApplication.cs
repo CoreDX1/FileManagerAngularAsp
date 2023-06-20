@@ -114,7 +114,7 @@ public class FolderApplication : IFolderApplication
         {
             Path = newDirectoryPath,
             TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
-            Author = "Christian",
+            Author = name,
             Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
             LastModified = Directory.GetLastWriteTime(directoryPath),
         };
