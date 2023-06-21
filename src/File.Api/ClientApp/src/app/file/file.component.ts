@@ -8,6 +8,7 @@ import { DataService } from "../components/list/data.service";
 })
 export class FileComponent implements OnInit {
     private url = "";
+    public nameFolder = "";
     public snip = false;
 
     public AllFiles: IFile = {
@@ -47,7 +48,6 @@ export class FileComponent implements OnInit {
     private getNameFile(): void {
         this.DataSvc.getAllFiles(this.url).subscribe((data) => {
             this.AllFiles = data;
-            console.log(this.AllFiles, data);
         });
     }
 
@@ -57,8 +57,16 @@ export class FileComponent implements OnInit {
     }
 
     public getValue = (name: string): void => {
-        console.log(name);
+        const ruta = "\\" + name;
+        this.nameFolder = ruta;
     };
+
+    public handleClickCreateFolder(): void {
+        const name = this.AllFiles.data.path + this.nameFolder;
+        const nameSplit = name.split("\\");
+        console.log(nameSplit);
+    }
+
     public handleClickRefresh(): void {
         this.snip = true;
         setTimeout(() => {
