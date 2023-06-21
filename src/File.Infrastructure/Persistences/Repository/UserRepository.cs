@@ -27,11 +27,11 @@ public class UserRepository : IUserRepository
         return user!;
     }
 
-    public async Task<string> LoginUser(User user)
+    public async Task<User> LoginUser(User user)
     {
         User? code = await this.context.Users.FirstOrDefaultAsync(
             x => x.Email == user.Email && x.PasswordHash == user.PasswordHash
         );
-        return code!.PasswordSalt;
+        return code!;
     }
 }

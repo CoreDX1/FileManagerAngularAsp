@@ -75,7 +75,7 @@ public class UserApplication : IUserApplication
     {
         var response = new BaseResponse<string>();
         User userMapper = this._mapper.Map<User>(user);
-        string code = await this._userRepository.LoginUser(userMapper);
+        User code = await this._userRepository.LoginUser(userMapper);
         if (code == null)
         {
             response.Success = false;
@@ -85,7 +85,7 @@ public class UserApplication : IUserApplication
         {
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_AUTH_SUCCESS;
-            response.Data = code;
+            response.Data = code.PasswordSalt;
         }
         return response;
     }

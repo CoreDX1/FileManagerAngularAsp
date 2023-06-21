@@ -14,7 +14,7 @@ public class FolderApplication : IFolderApplication
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
-    private readonly string baseDirectory;
+    private readonly string _baseDirectory;
     private readonly UtilsApplication _utilsApplication;
 
     public FolderApplication(
@@ -25,17 +25,15 @@ public class FolderApplication : IFolderApplication
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        baseDirectory = @"C:\Users\Christian\Desktop\File\";
+        _baseDirectory = @"C:\Users\Christian\Desktop\File\";
         _utilsApplication = utilsApplication;
     }
 
     public BaseResponse<RootResponseDto> CloneGetRoot(string name)
     {
         var response = new BaseResponse<RootResponseDto>();
-        // TODO : check if directory exists == gmail
-        string directoryPath = _utilsApplication.DirectoryExists(name);
-        Console.WriteLine(directoryPath);
 
+        string directoryPath = _utilsApplication.DirectoryExists(name);
         if (directoryPath == null)
         {
             response.Success = false;
@@ -43,7 +41,6 @@ public class FolderApplication : IFolderApplication
             return response;
         }
 
-        // TODO : check if directory is empty
         string[] fileNames = Directory.GetFiles(directoryPath);
         string[] directoryNames = Directory.GetDirectories(directoryPath);
 
@@ -80,8 +77,8 @@ public class FolderApplication : IFolderApplication
     {
         var response = new BaseResponse<RootResponseDto>();
         // TODO : check if directory exists == gmail
+
         string directoryPath = _utilsApplication.DirectoryExists(name);
-        Console.WriteLine(directoryPath);
 
         if (directoryPath == null)
         {
@@ -131,16 +128,18 @@ public class FolderApplication : IFolderApplication
     {
         var response = new BaseResponse<Folder>();
         Folder folder = _mapper.Map<Folder>(folderRequest);
-        var validate = await GetByName(folderRequest.Name!, folderRequest.Path!);
-        if (!validate.Success)
+        string comPath = Path.Combine(_baseDirectory, folderRequest.Path!);
+        var existingFolder = await GetByName(folderRequest.Name!, comPath);
+        if (!existingFolder.Success)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
             return response;
         }
-        Directory.CreateDirectory(Path.Combine(folder.Path));
-        bool create = await _unitOfWork.FolderRepository.Create(folder);
-        if (!create)
+        Directory.CreateDirectory(Path.Combine(comPath));
+        folder.Path = comPath;
+        bool isFolderCreated = await _unitOfWork.FolderRepository.Create(folder);
+        if (!isFolderCreated)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_SAVE_ERROR;
