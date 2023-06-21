@@ -2,6 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/internal/Observable";
 import { IFile } from "src/app/models/file/file";
 import { HttpClient } from "@angular/common/http";
+import { folderCreateRequestDto } from "src/app/models/Folder/folderCreateRequestDto";
+import { folderResponseDto } from "src/app/models/Folder/folderResponseDto";
 
 @Injectable({
     providedIn: "root"
@@ -14,5 +16,15 @@ export class DataService {
     getAllFiles(path = ""): Observable<IFile> {
         const data = this.http.get<IFile>(`${this.urlApi}/${path}`);
         return data;
+    }
+
+    postCreateFolder(
+        folder: folderCreateRequestDto
+    ): Observable<folderResponseDto> {
+        const response = this.http.post<folderResponseDto>(
+            `${this.urlApi}`,
+            folder
+        );
+        return response;
     }
 }
