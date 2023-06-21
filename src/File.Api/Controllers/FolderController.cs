@@ -23,7 +23,7 @@ namespace src.File.Api.Controllers
             StatusCodes.Status200OK,
             Type = typeof(BaseResponse<RootResponseDto>)
         )]
-        public IActionResult ViewFiles(string user, string file)
+        public ActionResult<BaseResponse<RootResponseDto>> ViewFiles(string user, string file)
         {
             var response = this.app.GetRoot(user, file);
             return Ok(response);
@@ -35,7 +35,7 @@ namespace src.File.Api.Controllers
             StatusCodes.Status200OK,
             Type = typeof(BaseResponse<RootResponseDto>)
         )]
-        public IActionResult ViewFiles(string user)
+        public ActionResult<BaseResponse<RootResponseDto>> ViewFiles(string user)
         {
             var response = this.app.CloneGetRoot(user);
             return Ok(response);
