@@ -34,7 +34,7 @@ public class FolderApplication : IFolderApplication
         var response = new BaseResponse<RootResponseDto>();
 
         string directoryPath = _utilsApplication.DirectoryExists(name);
-        if (directoryPath == null)
+        if (directoryPath is null)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
@@ -44,7 +44,7 @@ public class FolderApplication : IFolderApplication
         string[] fileNames = Directory.GetFiles(directoryPath);
         string[] directoryNames = Directory.GetDirectories(directoryPath);
 
-        IList<Folder> folderTasks = new List<Folder>();
+        var folderTasks = new List<Folder>();
         foreach (string dir in directoryNames)
         {
             var folder = _utilsApplication.ViewFolder(dir, Path.GetFileName(dir));
@@ -56,27 +56,24 @@ public class FolderApplication : IFolderApplication
             .OrderByDescending(x => x.CreateDate)
             .ToList();
 
-        var rootResponse = new RootResponseDto
-        {
-            Path = directoryPath,
-            TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
-            Author = name,
-            Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
-            LastModified = Directory.GetLastWriteTime(directoryPath),
-        };
-
         return new BaseResponse<RootResponseDto>()
         {
             Success = true,
             Message = ReplyMessage.MESSAGE_QUERY_SUCCESS,
-            Data = rootResponse
+            Data = new RootResponseDto
+            {
+                Path = directoryPath,
+                TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
+                Author = name,
+                Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
+                LastModified = Directory.GetLastWriteTime(directoryPath),
+            }
         };
     }
 
     public BaseResponse<RootResponseDto> GetRoot(string name, string file)
     {
         var response = new BaseResponse<RootResponseDto>();
-        // TODO : check if directory exists == gmail
 
         string directoryPath = _utilsApplication.DirectoryExists(name);
 
@@ -87,15 +84,13 @@ public class FolderApplication : IFolderApplication
             return response;
         }
 
-        // TODO : check if directory is empty
         string decodedPath = HttpUtility.UrlDecode(file);
         string newDirectoryPath = Path.Combine(directoryPath, decodedPath.Replace('/', '\\'));
 
-        // TODO : check if directory is empty
         string[] fileNames = Directory.GetFiles(newDirectoryPath);
         string[] directoryNames = Directory.GetDirectories(newDirectoryPath);
 
-        IList<Folder> folderTasks = new List<Folder>();
+        var folderTasks = new List<Folder>();
         foreach (string dir in directoryNames)
         {
             var folder = _utilsApplication.ViewFolder(dir, Path.GetFileName(dir));
@@ -107,20 +102,18 @@ public class FolderApplication : IFolderApplication
             .OrderByDescending(x => x.CreateDate)
             .ToList();
 
-        var rootResponse = new RootResponseDto
-        {
-            Path = newDirectoryPath,
-            TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
-            Author = name,
-            Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
-            LastModified = Directory.GetLastWriteTime(directoryPath),
-        };
-
         return new BaseResponse<RootResponseDto>()
         {
             Success = true,
             Message = ReplyMessage.MESSAGE_QUERY_SUCCESS,
-            Data = rootResponse
+            Data = new RootResponseDto
+            {
+                Path = newDirectoryPath,
+                TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
+                Author = _unitOfWork.FolderRepository.AccountName(name),
+                Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
+                LastModified = Directory.GetLastWriteTime(directoryPath),
+            }
         };
     }
 

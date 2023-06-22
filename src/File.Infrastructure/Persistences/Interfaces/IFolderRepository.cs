@@ -10,4 +10,5 @@ public interface IFolderRepository
     public Folder GetByPath(string path, string name);
     public Task<Folder> DeleteFolder(Folder folder);
     public Task<IEnumerable<Folder>> SearchByContent(string searchQuery);
+    public string AccountName(string code);
 }

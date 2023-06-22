@@ -30,6 +30,12 @@ public class FolderRepository : IFolderRepository
         return result!;
     }
 
+    public string AccountName(string code)
+    {
+        var name = _context.Users.FirstOrDefault(x => x.PasswordSalt == code);
+        return name!.Name;
+    }
+
     public async Task<bool> Create(Folder folder)
     {
         await _context.Folders.AddAsync(folder);
