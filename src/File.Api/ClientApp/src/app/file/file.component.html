@@ -42,6 +42,9 @@
         </div>
         <div>
             <p class="text-4xl font-semibold pb-5">Folders</p>
+            <p class="text-2xl font-semibold pb-5">
+                {{ AllFiles.data.author }}
+            </p>
             <div class="grid grid-rows-2 grid-cols-5 gap-3 max-w-8xl">
                 <section
                     *ngFor="let directory of AllFiles.data.directories"

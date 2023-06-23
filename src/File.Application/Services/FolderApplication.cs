@@ -29,12 +29,25 @@ public class FolderApplication : IFolderApplication
         _utilsApplication = utilsApplication;
     }
 
+    public IEnumerable<FolderResponseDto> ListFolder(string[] folder)
+    {
+        IEnumerable<Folder> folderTasks = folder.Select<string, Folder>(
+            dir => _utilsApplication.ViewFolder(dir, Path.GetFileName(dir))
+        );
+
+        IEnumerable<Folder> filteredFolders = folderTasks
+            .Where(x => !x.IsDeleted)
+            .OrderByDescending(x => x.CreateDate);
+
+        return _mapper.Map<IEnumerable<FolderResponseDto>>(filteredFolders);
+    }
+
     public BaseResponse<RootResponseDto> CloneGetRoot(string name)
     {
         var response = new BaseResponse<RootResponseDto>();
 
         string directoryPath = _utilsApplication.DirectoryExists(name);
-        if (directoryPath is null)
+        if (directoryPath is null || directoryPath == "")
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_QUERY_EMPTY;
@@ -44,17 +57,7 @@ public class FolderApplication : IFolderApplication
         string[] fileNames = Directory.GetFiles(directoryPath);
         string[] directoryNames = Directory.GetDirectories(directoryPath);
 
-        var folderTasks = new List<Folder>();
-        foreach (string dir in directoryNames)
-        {
-            var folder = _utilsApplication.ViewFolder(dir, Path.GetFileName(dir));
-            folderTasks.Add(folder);
-        }
-
-        folderTasks = folderTasks
-            .Where(x => x.IsDeleted == false)
-            .OrderByDescending(x => x.CreateDate)
-            .ToList();
+        var folderTasks = ListFolder(directoryNames);
 
         return new BaseResponse<RootResponseDto>()
         {
@@ -64,8 +67,8 @@ public class FolderApplication : IFolderApplication
             {
                 Path = directoryPath,
                 TotalSize = _utilsApplication.AllDirectorySize(directoryNames, fileNames),
-                Author = name,
-                Directories = _mapper.Map<IEnumerable<FolderResponseDto>>(folderTasks),
+                Author = _unitOfWork.FolderRepository.AccountName(name),
+                Directories = folderTasks,
                 LastModified = Directory.GetLastWriteTime(directoryPath),
             }
         };
@@ -119,19 +122,26 @@ public class FolderApplication : IFolderApplication
 
     public async Task<BaseResponse<Folder>> CreateFolder(FolderCreateRequestDto folderRequest)
     {
-        var response = new BaseResponse<Folder>();
+        BaseResponse<Folder> response = new();
         Folder folder = _mapper.Map<Folder>(folderRequest);
         string comPath = Path.Combine(_baseDirectory, folderRequest.Path!);
+
         var existingFolder = await GetByName(folderRequest.Name!, comPath);
+
         if (!existingFolder.Success)
         {
             response.Success = false;
             response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
             return response;
         }
-        Directory.CreateDirectory(Path.Combine(comPath));
+        else
+        {
+            Directory.CreateDirectory(comPath);
+        }
+
         folder.Path = comPath;
         bool isFolderCreated = await _unitOfWork.FolderRepository.Create(folder);
+
         if (!isFolderCreated)
         {
             response.Success = false;
