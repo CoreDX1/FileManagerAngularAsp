@@ -32,13 +32,13 @@ public class UserApplication : IUserApplication
             return response;
         }
 
-        User userEntity = this._mapper.Map<User>(user);
+        User userEntity = _mapper.Map<User>(user);
         string path = @"C:\Users\Christian\Desktop\File";
 
         userEntity.PasswordSalt = Guid.NewGuid().ToString().Replace("-", "");
         var combinatePath = Path.Combine(path, userEntity.PasswordSalt);
         Directory.CreateDirectory(combinatePath);
-        bool result = await this._userRepository.AddUser(userEntity);
+        bool result = await _userRepository.AddUser(userEntity);
         if (!result)
         {
             response.Success = false;
@@ -48,7 +48,7 @@ public class UserApplication : IUserApplication
         {
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_SAVE_SUCCESS;
-            response.Data = this._mapper.Map<UserRegisterResponseDto>(userEntity);
+            response.Data = _mapper.Map<UserRegisterResponseDto>(userEntity);
         }
         return response;
     }
@@ -56,7 +56,7 @@ public class UserApplication : IUserApplication
     public async Task<BaseResponse<UserRegisterResponseDto>> GetUserByEmail(string email)
     {
         var response = new BaseResponse<UserRegisterResponseDto>();
-        User? user = await this._userRepository.GetUserByEmail(email);
+        User user = await _userRepository.GetUserByEmail(email);
         if (user != null)
         {
             response.Success = false;
@@ -66,7 +66,7 @@ public class UserApplication : IUserApplication
         {
             response.Success = true;
             response.Message = ReplyMessage.MESSAGE_QUERY_SUCCESS;
-            response.Data = this._mapper.Map<UserRegisterResponseDto>(user);
+            response.Data = _mapper.Map<UserRegisterResponseDto>(user);
         }
         return response;
     }
@@ -74,8 +74,8 @@ public class UserApplication : IUserApplication
     public async Task<BaseResponse<string>> LoginUser(UserLoginRequestDto user)
     {
         var response = new BaseResponse<string>();
-        User userMapper = this._mapper.Map<User>(user);
-        User code = await this._userRepository.LoginUser(userMapper);
+        User userMapper = _mapper.Map<User>(user);
+        User code = await _userRepository.LoginUser(userMapper);
         if (code == null)
         {
             response.Success = false;
